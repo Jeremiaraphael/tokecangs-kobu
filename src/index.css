@@ -1,0 +1,74 @@
+@import "tailwindcss";
+
+@theme {
+  --font-display: "Fredoka", ui-rounded, system-ui, sans-serif;
+}
+
+html {
+  -webkit-tap-highlight-color: transparent; /* no grey flash on Android taps */
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  background: radial-gradient(ellipse at top, #065f46 0%, #022c22 70%) fixed;
+  background-color: #022c22;
+  color: #ecfdf5;
+  /* Stop Android Chrome's pull-to-refresh from reloading mid-game. */
+  overscroll-behavior-y: none;
+}
+
+button {
+  touch-action: manipulation; /* no double-tap-zoom delay on card taps */
+  -webkit-touch-callout: none; /* no long-press menu on cards */
+}
+
+.card-back {
+  background-color: #7f1d1d;
+  background-image:
+    repeating-linear-gradient(45deg, rgb(255 255 255 / 0.07) 0 6px, transparent 6px 12px),
+    repeating-linear-gradient(-45deg, rgb(255 255 255 / 0.07) 0 6px, transparent 6px 12px);
+}
+
+@keyframes pop {
+  0% { transform: scale(0.85); opacity: 0; }
+  100% { transform: scale(1); opacity: 1; }
+}
+.animate-pop { animation: pop 180ms ease-out; }
+
+/* Two-sided cards that flip in 3D (peeks, reveals). */
+.card-3d { perspective: 700px; }
+.card-3d-inner {
+  transform-style: preserve-3d;
+  transition-property: transform;
+  transition-timing-function: cubic-bezier(.3,.7,.3,1);
+}
+.card-side {
+  position: absolute;
+  inset: 0;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+.card-front { transform: rotateY(180deg); }
+
+/* The discard pile "takes the hit" when a match/slam lands. */
+@keyframes impact {
+  0% { transform: translateY(0) scale(1); }
+  30% { transform: translateY(3px) scale(0.97); }
+  60% { transform: translateY(-1px) scale(1.02); }
+  100% { transform: translateY(0) scale(1); }
+}
+.animate-impact { animation: impact 320ms ease-out; }
+
+/* "MATCH!" / "SNAP!" burst above the discard pile */
+@keyframes combo {
+  0% { transform: translate(-50%, 6px) scale(0.6); opacity: 0; }
+  20% { transform: translate(-50%, -4px) scale(1.15); opacity: 1; }
+  70% { transform: translate(-50%, -8px) scale(1); opacity: 1; }
+  100% { transform: translate(-50%, -18px) scale(0.95); opacity: 0; }
+}
+.animate-combo { animation: combo 1.3s ease-out forwards; }
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-pop, .animate-combo, .animate-impact { animation-duration: 1ms; }
+  .card-3d-inner { transition-duration: 1ms !important; }
+}

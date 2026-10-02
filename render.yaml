@@ -1,0 +1,13 @@
+# Render Blueprint: one web service that serves the game page AND the live game connection.
+# Render → New → Blueprint → pick this repository → Apply.
+services:
+  - type: web
+    name: tokecangs-kobu
+    runtime: node
+    plan: free
+    buildCommand: npm ci --include=dev && npm run build
+    startCommand: npm start
+    healthCheckPath: /
+    envVars:
+      - key: NODE_VERSION
+        value: "22"
